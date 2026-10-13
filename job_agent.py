@@ -1,9 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-import os
 
-WHATSAPP_PHONE = "923422663301"  # MEDcore MENTORs notification line
-CALLMEBOT_API_KEY = "PASTE_YOUR_API_KEY_HERE"  # Your CallMeBot API Key
+# Your Telegram Username from CallMeBot
+TELEGRAM_USER = "@Jamshaidniazi"
 
 def search_global_healthcare_jobs():
     jobs = []
@@ -33,17 +32,18 @@ def search_global_healthcare_jobs():
         
     return jobs
 
-def send_whatsapp_alert(message):
+def send_telegram_alert(message):
     encoded_msg = requests.utils.quote(message)
-    url = f"https://api.callmebot.com/whatsapp.php?phone={WHATSAPP_PHONE}&text={encoded_msg}&apikey={CALLMEBOT_API_KEY}"
+    # CallMeBot Telegram Endpoint
+    url = f"https://api.callmebot.com/text.php?user={TELEGRAM_USER}&text={encoded_msg}"
     response = requests.get(url)
-    print("WhatsApp Alert Status:", response.status_code)
+    print("Telegram Alert Status:", response.status_code)
 
 if __name__ == "__main__":
     found_jobs = search_global_healthcare_jobs()
     if found_jobs:
-        digest = " MEDcore MENTORs Hourly Job Alert:\n\n" + "\n\n".join(found_jobs)
-        send_whatsapp_alert(digest)
+        digest = "MEDcore MENTORs Hourly Job Alert:\n\n" + "\n\n".join(found_jobs)
+        send_telegram_alert(digest)
     else:
         print("No new matching global jobs found in this cycle.")
-      
+        
